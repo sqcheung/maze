@@ -32,6 +32,7 @@ namespace Maze.Console
     {
         readonly LovelyRandomTreeCellRenderer _cellRenderer;
         readonly LovelyTreeBackgroundRenderer _backgroundRenderer;
+        readonly LovelyTreeAccessoryRenderer _accessoryRenderer;
         const int CellSize = 86;
 
         public GridRenderer()
@@ -40,6 +41,7 @@ namespace Maze.Console
             {
                 _cellRenderer = new LovelyRandomTreeCellRenderer();
                 _backgroundRenderer = new LovelyTreeBackgroundRenderer();
+                _accessoryRenderer = new LovelyTreeAccessoryRenderer();
             }
             catch
             {
@@ -60,11 +62,15 @@ namespace Maze.Console
                     _backgroundRenderer.Render(context, new Rectangle(0, 0, width, height));
                     foreach (RenderCell cell in grid.GetCells())
                     {
+                        var cellArea = new Rectangle(cell.Column * CellSize, cell.Row * CellSize, CellSize, CellSize);
+                        
                         if (cell.RenderType == RenderType.Wall)
                         {
                             _cellRenderer.Render(
-                                context, new Rectangle(cell.Column * CellSize, cell.Row * CellSize, CellSize, CellSize), cell);
+                                context, cellArea, cell);
                         }
+                        
+                        _accessoryRenderer.Render(context, cellArea, cell);
                     }
                 });
                 image.Save(stream, ImageFormats.Png);
