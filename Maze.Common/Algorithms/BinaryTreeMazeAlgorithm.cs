@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Maze.Common
+namespace Maze.Common.Algorithms
 {
-    public class BinaryTreeMazeAlgorithm
+    public class BinaryTreeMazeAlgorithm : IMazeUpdater
     {
         public void Update(Grid grid)
         {

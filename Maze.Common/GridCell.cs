@@ -8,12 +8,13 @@ namespace Maze.Common
         Guid Id { get; } = Guid.NewGuid();
         public int Row { get; }
         public int Column { get; }
-        HashSet<GridCell> Links { get; } = new HashSet<GridCell>();
+        readonly HashSet<GridCell> _links = new HashSet<GridCell>();
         
         public GridCell North { get; private set; }
         public GridCell South { get; private set; }
         public GridCell East { get; private set; }
         public GridCell West { get; private set; }
+        public IReadOnlyCollection<GridCell> Links => _links;
 
         public GridCell(int row, int column)
         {
@@ -39,7 +40,7 @@ namespace Maze.Common
             if (gridCell == null) throw new ArgumentNullException(nameof(gridCell));
             if (!IsNeighbor(gridCell)) throw new ArgumentException("Can only be linked to neighbors");
             
-            Links.Add(gridCell);
+            _links.Add(gridCell);
             if (bidirectional) gridCell.Link(this, false);
             return this;
         }
@@ -58,14 +59,14 @@ namespace Maze.Common
             if (gridCell == null) throw new ArgumentNullException(nameof(gridCell));
             if (!IsNeighbor(gridCell)) throw new ArgumentException("The cell is not a neighbor.");
             
-            Links.Remove(gridCell);
+            _links.Remove(gridCell);
             if (bidirectional) gridCell.Unlink(this, false);
             return this;
         }
 
         public bool IsLinked(GridCell gridCell)
         {
-            return gridCell != null && Links.Contains(gridCell);
+            return gridCell != null && _links.Contains(gridCell);
         }
 
         public IList<GridCell> Neighbors

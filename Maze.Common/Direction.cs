@@ -11,11 +11,4 @@ namespace Maze.Common
         North = 4,
         South = 8
     }
-
-    public enum RenderType
-    {
-        Unknown = 0,
-        Ground = 1,
-        Wall = 2
-    }
 }
