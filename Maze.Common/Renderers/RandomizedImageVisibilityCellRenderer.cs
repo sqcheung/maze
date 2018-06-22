@@ -1,31 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.ImageSharp.Processing.Drawing;
 using SixLabors.Primitives;
-using Rectangle = System.Drawing.Rectangle;
 
-namespace Maze.Common
+namespace Maze.Common.Renderers
 {
-    public abstract class RandomizedVisibleCellRenderer : CellRenderer
+    public abstract class RandomizedImageVisibilityCellRenderer : CellRenderer
     {
         readonly bool _disposeTexturesWhenClose;
-        readonly Image<Rgba32>[] _textures;
+        readonly DisposableCollection<Image<Rgba32>> _textures;
         readonly Random _random = new Random();
         bool _isDisposed;
 
         protected abstract bool IsSupported(RenderCell cell);
         public int Possibility { get; set; } = 30;
         
-        protected RandomizedVisibleCellRenderer(
+        protected RandomizedImageVisibilityCellRenderer(
             IEnumerable<Image<Rgba32>> textures, 
             bool disposeTexturesWhenClose)
         {
             _disposeTexturesWhenClose = disposeTexturesWhenClose;
-            _textures = textures.ToArray();
+            _textures = new DisposableCollection<Image<Rgba32>>(textures);
         }
         
         public override void Render(IImageProcessingContext<Rgba32> context, Rectangle cellArea, RenderCell cell)
@@ -34,7 +32,7 @@ namespace Maze.Common
             bool shouldRenderer = _random.Next(100) <= Possibility;
             if (shouldRenderer)
             {
-                Image<Rgba32> texture = _textures[_random.Next(_textures.Length)];
+                Image<Rgba32> texture = _textures[_random.Next(_textures.Count)];
                 int maxX = cellArea.Width - texture.Width;
                 int maxY = cellArea.Height - texture.Height;
                 
@@ -54,10 +52,7 @@ namespace Maze.Common
 
             if (disposing && _disposeTexturesWhenClose)
             {
-                foreach (Image<Rgba32> texture in _textures)
-                {
-                    texture.Dispose();
-                }
+                _textures.Dispose();
             }
 
             _isDisposed = true;

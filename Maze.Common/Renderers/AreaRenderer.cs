@@ -1,15 +1,15 @@
 ﻿using System;
-using System.Drawing;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
+using SixLabors.Primitives;
 
-namespace Maze.Common
+namespace Maze.Common.Renderers
 {
-    public abstract class ContextBasedRenderer : IDisposable
+    public abstract class AreaRenderer : IDisposable
     {
         public abstract void Render(
             IImageProcessingContext<Rgba32> context, 
-            Rectangle cellArea);
+            Rectangle renderArea);
 
         protected abstract void Dispose(bool disposing);
 

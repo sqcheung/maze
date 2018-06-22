@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Drawing;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
+using SixLabors.Primitives;
 
-namespace Maze.Common
+namespace Maze.Common.Renderers
 {
     public abstract class CellRenderer : IDisposable
     {
