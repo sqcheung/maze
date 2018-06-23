@@ -17,36 +17,32 @@ namespace Maze.GameLevelGenerator
         readonly DisposableCollection<CellRenderer> _wallRenderers;
         readonly DisposableCollection<AreaRenderer> _atomsphereRenderers;
         readonly GameLevelRendererSettings _settings;
-        readonly bool _disposeRenderersWhenClose;
         bool _isDisposed;
 
-        public GameLevelRenderer(
-            IEnumerable<AreaRenderer> backgroundRenderer,
-            IEnumerable<CellRenderer> groundRenderers,
-            IEnumerable<CellRenderer> wallRenderers,
-            IEnumerable<AreaRenderer> atomsphereRenderers,
-            GameLevelRendererSettings settings,
-            bool disposeRenderersWhenClose)
+        static DisposableCollection<T> ToDisposableCollection<T>(IEnumerable<T> collection)
+            where T : IDisposable
         {
-            _backgroundRenderers = new DisposableCollection<AreaRenderer>(backgroundRenderer);
-            _groundRenderers = new DisposableCollection<CellRenderer>(groundRenderers);
-            _wallRenderers = new DisposableCollection<CellRenderer>(wallRenderers);
-            _atomsphereRenderers = new DisposableCollection<AreaRenderer>(atomsphereRenderers);
-            _settings = settings;
-            _disposeRenderersWhenClose = disposeRenderersWhenClose;
+            return new DisposableCollection<T>(collection);
+        }
+
+        public GameLevelRenderer(IGameLevelComponentFactory factory)
+        {
+            _backgroundRenderers = ToDisposableCollection(factory.CreateBackgroundRenderers());
+            _groundRenderers = ToDisposableCollection(factory.CreateGroundRenderers());
+            _wallRenderers = ToDisposableCollection(factory.CreateWallRenderers());
+            _atomsphereRenderers = ToDisposableCollection(factory.CreateAtomsphereRenderers());
+            _settings = factory.CreateLevelSettings();
         }
         
         public void Dispose()
         {
             if (_isDisposed) return;
-            if (_disposeRenderersWhenClose)
-            {
-                _backgroundRenderers.Dispose();
-                _groundRenderers.Dispose();
-                _wallRenderers.Dispose();
-                _atomsphereRenderers.Dispose();
-            }
-
+            
+            _backgroundRenderers.Dispose();
+            _groundRenderers.Dispose();
+            _wallRenderers.Dispose();
+            _atomsphereRenderers.Dispose();
+            
             _isDisposed = true;
         }
 

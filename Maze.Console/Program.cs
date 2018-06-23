@@ -14,18 +14,12 @@ namespace Maze.Console
     {
         static void Main()
         {
-            var grid = new Grid(5, 5);
+            var grid = new Grid(10, 20);
             new AldosBroderMazeAlgorithm().Update(grid);
             var renderGrid = new RenderGrid(grid);
 
             using (FileStream stream = File.Create(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "maze.png")))
-            using (var gameLevelRenderer = new GameLevelRenderer(
-                new [] {new LovelyTreeBackgroundRenderer()},
-                new [] {new LovelyTreeAccessoryRenderer()},
-                new [] {new LovelyRandomTreeCellRenderer()},
-                Array.Empty<AreaRenderer>(),
-                new GameLevelRendererSettings(78, 20), 
-                true))
+            using (var gameLevelRenderer = new GameLevelRenderer(new GrassGameLevelComponentFactory()))
             {
                 gameLevelRenderer.Render(renderGrid, stream);
             }
