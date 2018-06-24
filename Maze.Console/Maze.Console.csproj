@@ -8,6 +8,7 @@
     <ProjectReference Include="..\Maze.GameLevelGenerator\Maze.GameLevelGenerator.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Axe.Cli.Parser" Version="0.8.0-beta" />
     <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0004" />
     <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta0004" />
   </ItemGroup>

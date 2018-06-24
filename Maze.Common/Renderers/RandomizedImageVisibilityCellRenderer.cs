@@ -8,17 +8,17 @@ using SixLabors.Primitives;
 
 namespace Maze.Common.Renderers
 {
-    public abstract class RandomizedImageVisibilityCellRenderer : CellRenderer
+    public class RandomizedImageVisibilityCellRenderer : CellRenderer
     {
         readonly bool _disposeTexturesWhenClose;
         readonly DisposableCollection<Image<Rgba32>> _textures;
         readonly Random _random = new Random();
         bool _isDisposed;
 
-        protected abstract bool IsSupported(RenderCell cell);
+        protected virtual bool IsSupported(RenderCell cell) => true;
         public int Possibility { get; set; } = 30;
-        
-        protected RandomizedImageVisibilityCellRenderer(
+
+        public RandomizedImageVisibilityCellRenderer(
             IEnumerable<Image<Rgba32>> textures, 
             bool disposeTexturesWhenClose)
         {
