@@ -13,7 +13,6 @@ namespace Maze.Common.Renderers
         readonly bool _disposeTextureWhenClose;
         readonly DisposableCollection<Image<Rgba32>> _textures;
         readonly IDictionary<string, Image<Rgba32>> _map;
-        readonly Random _random = new Random();
         bool _isDisposed;
         
         protected abstract bool IsSupported(RenderCell cell);
@@ -31,6 +30,7 @@ namespace Maze.Common.Renderers
         {
             if (!IsSupported(cell)) return;
             Image<Rgba32> texture = _map[GetTextureKey(cell)];
+            if (texture == null) return;
             var location = new Point(
                 (cellArea.Left + cellArea.Right) / 2,
                 cellArea.Bottom);
