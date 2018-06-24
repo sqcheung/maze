@@ -19,7 +19,7 @@ namespace Maze.Console
             var renderGrid = new RenderGrid(grid);
 
             using (FileStream stream = File.Create(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "maze.png")))
-            using (var gameLevelRenderer = new GameLevelRenderer(new GrassGameLevelComponentFactory()))
+            using (var gameLevelRenderer = new GameLevelRenderer(new LovelyTreeGameLevelComponentFactory()))
             {
                 gameLevelRenderer.Render(renderGrid, stream);
             }

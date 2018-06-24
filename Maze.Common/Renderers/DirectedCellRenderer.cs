@@ -8,8 +8,8 @@ namespace Maze.Common.Renderers
     public class DirectedCellRenderer : KeyedImageCellRenderer
     {
         public DirectedCellRenderer(
-            Image<Rgba32> south,
             Image<Rgba32> north,
+            Image<Rgba32> south,
             Image<Rgba32> east,
             Image<Rgba32> west,
             Image<Rgba32> northSouth,
@@ -23,8 +23,8 @@ namespace Maze.Common.Renderers
             Image<Rgba32> northEastWest,
             Image<Rgba32> southEastWest,
             Image<Rgba32> northSouthEastWest) : base(CreateDirectedResources(
-                south,
                 north,
+                south,
                 east,
                 west,
                 northSouth,
@@ -42,7 +42,7 @@ namespace Maze.Common.Renderers
         }
 
         static IDictionary<string, Image<Rgba32>> CreateDirectedResources(
-            Image<Rgba32> south, Image<Rgba32> north, Image<Rgba32> east, Image<Rgba32> west, Image<Rgba32> northSouth, 
+            Image<Rgba32> north, Image<Rgba32> south, Image<Rgba32> east, Image<Rgba32> west, Image<Rgba32> northSouth, 
             Image<Rgba32> northEast, Image<Rgba32> northWest, Image<Rgba32> southEast, Image<Rgba32> southWest, 
             Image<Rgba32> eastWest, Image<Rgba32> northSouthEast, Image<Rgba32> northSouthWest, 
             Image<Rgba32> northEastWest, Image<Rgba32> southEastWest, Image<Rgba32> northSouthEastWest)

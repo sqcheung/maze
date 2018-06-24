@@ -87,8 +87,25 @@ namespace Maze.GameLevelGenerator
 
         public IEnumerable<CellRenderer> CreateGroundRenderers()
         {
-            yield return new GrassGroundRenderer();
+            yield return CreateGrassGroundRenderer();
             yield return CreateGrassDartRenderer();
+        }
+
+        static CellRenderer CreateGrassGroundRenderer()
+        {
+            string[] resourceKeys =
+            {
+                "Maze.GameLevelGenerator.Textures.sm_grass_ground_1.png",
+                "Maze.GameLevelGenerator.Textures.sm_grass_ground_2.png",
+                "Maze.GameLevelGenerator.Textures.sm_grass_ground_3.png",
+                "Maze.GameLevelGenerator.Textures.sm_grass_ground_4.png",
+                "Maze.GameLevelGenerator.Textures.sm_grass_ground_5.png",
+                "Maze.GameLevelGenerator.Textures.sm_grass_ground_6.png"
+            };
+
+            return new RandomizedImageCellRenderer(
+                typeof(GrassGameLevelComponentFactory).Assembly.LoadEmbeddedResources(resourceKeys),
+                true);
         }
 
         public IEnumerable<AreaRenderer> CreateAtomsphereRenderers()
