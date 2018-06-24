@@ -53,7 +53,7 @@ namespace Maze.Console
             var renderGrid = new RenderGrid(grid);
 
             using (FileStream stream = File.Create(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "maze.png")))
-            using (var gameLevelRenderer = new GameLevelRenderer(factory))
+            using (var gameLevelRenderer = new Fake3DGameLevelRenderer(factory))
             {
                 gameLevelRenderer.Render(renderGrid, stream);
             }
@@ -65,6 +65,7 @@ namespace Maze.Console
             {
                 case "lovely-tree": return new LovelyTreeGameLevelComponentFactory();
                 case "farm": return new GrassGameLevelComponentFactory();
+                case "fake3d": return new Fake3DGameLevelComponentFactory();
                 default: return null;
             }
         }
@@ -73,7 +74,7 @@ namespace Maze.Console
         {
             C.WriteLine("Usage:");
             C.WriteLine("--kind | -k   The kind of maze to render. Supported values are");
-            C.WriteLine("              lovely-tree, farm");
+            C.WriteLine("              lovely-tree, farm, fake3d");
             C.WriteLine("--row  | -r   Specify the number of rows in the maze.");
             C.WriteLine("--column | -c Specify the number of columns in the maze.");
         }
