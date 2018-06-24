@@ -10,7 +10,7 @@ using SixLabors.Primitives;
 
 namespace Maze.GameLevelGenerator
 {
-    public class Fake3DGameLevelRenderer : GameLevelRenderer
+    public class NormalGameLevelRenderer : GameLevelRenderer
     {
         readonly DisposableCollection<AreaRenderer> _backgroundRenderers;
         readonly DisposableCollection<CellRenderer> _groundRenderers;
@@ -18,14 +18,14 @@ namespace Maze.GameLevelGenerator
         readonly DisposableCollection<AreaRenderer> _atomsphereRenderers;
         readonly GameLevelRendererSettings _settings;
         bool _isDisposed;
-        
+
         static DisposableCollection<T> ToDisposableCollection<T>(IEnumerable<T> collection)
             where T : IDisposable
         {
             return new DisposableCollection<T>(collection);
         }
 
-        public Fake3DGameLevelRenderer(IGameLevelComponentFactory factory)
+        public NormalGameLevelRenderer(IGameLevelComponentFactory factory)
             : base(factory)
         {
             _backgroundRenderers = ToDisposableCollection(factory.CreateBackgroundRenderers());
@@ -49,7 +49,12 @@ namespace Maze.GameLevelGenerator
 
             _isDisposed = true;
         }
-        
+
+        int CalculateDimension(int length)
+        {
+            return length * _settings.CellSize + _settings.Margin * 2;
+        }
+
         int TranslateCoordWithMargin(int original)
         {
             return original + _settings.Margin;
@@ -57,8 +62,8 @@ namespace Maze.GameLevelGenerator
         
         public override void Render(RenderGrid grid, Stream stream)
         {
-            int width = _settings.CellSize / 2 * (grid.RowCount + grid.ColumnCount) + _settings.Margin * 2;
-            int height = _settings.CellSize / 4 * (grid.RowCount + grid.ColumnCount) + _settings.Margin * 2;
+            int width = CalculateDimension(grid.ColumnCount);
+            int height = CalculateDimension(grid.RowCount);
             using (var image = new Image<Rgba32>(width, height))
             {
                 image.Mutate();
@@ -70,33 +75,28 @@ namespace Maze.GameLevelGenerator
                     {
                         backgroundRenderer.Render(context, fullArea);
                     }
-
-                    for (int columnIndex = grid.ColumnCount - 1; columnIndex >= 0; --columnIndex)
+                    
+                    foreach (RenderCell cell in grid.GetCells())
                     {
-                        for (int rowIndex = 0; rowIndex < grid.RowCount; ++rowIndex)
+                        var cellArea = new Rectangle(
+                            TranslateCoordWithMargin(cell.Column * _settings.CellSize), 
+                            TranslateCoordWithMargin(cell.Row * _settings.CellSize), 
+                            _settings.CellSize, 
+                            _settings.CellSize);
+
+                        if (cell.RenderType == RenderType.Ground)
                         {
-                            RenderCell cell = grid[rowIndex, columnIndex];
-                            
-                            var cellArea = new Rectangle(
-                                TranslateCoordWithMargin((cell.Column + cell.Row) * _settings.CellSize / 2), 
-                                TranslateCoordWithMargin((grid.ColumnCount - cell.Column - 1 + cell.Row) * _settings.CellSize / 4), 
-                                _settings.CellSize, 
-                                _settings.CellSize / 2);
-
-                            if (cell.RenderType == RenderType.Ground)
+                            foreach (CellRenderer groundRenderer in _groundRenderers)
                             {
-                                foreach (CellRenderer groundRenderer in _groundRenderers)
-                                {
-                                    groundRenderer.Render(context, cellArea, cell);
-                                }
+                                groundRenderer.Render(context, cellArea, cell);
                             }
+                        }
 
-                            if (cell.RenderType == RenderType.Wall)
+                        if (cell.RenderType == RenderType.Wall)
+                        {
+                            foreach (CellRenderer wallRenderer in _wallRenderers)
                             {
-                                foreach (CellRenderer wallRenderer in _wallRenderers)
-                                {
-                                    wallRenderer.Render(context, cellArea, cell);
-                                }
+                                wallRenderer.Render(context, cellArea, cell);
                             }
                         }
                     }

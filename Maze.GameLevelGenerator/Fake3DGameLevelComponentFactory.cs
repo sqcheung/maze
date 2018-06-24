@@ -6,7 +6,7 @@ using SixLabors.ImageSharp.PixelFormats;
 
 namespace Maze.GameLevelGenerator
 {
-    public class Fake3DGameLevelComponentFactory : IGameLevelComponentFactory
+    public class Fake3DGameLevelComponentFactory : IGameLevelComponentFactory, IGameLevelRendererFactory
     {
         public IEnumerable<AreaRenderer> CreateBackgroundRenderers()
         {
@@ -47,6 +47,11 @@ namespace Maze.GameLevelGenerator
         public GameLevelRendererSettings CreateLevelSettings()
         {
             return new GameLevelRendererSettings(200, 100);
+        }
+
+        public GameLevelRenderer CreateRenderer()
+        {
+            return new Fake3DGameLevelRenderer(this);
         }
     }
 }

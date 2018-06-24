@@ -6,7 +6,7 @@ using SixLabors.ImageSharp.PixelFormats;
 
 namespace Maze.GameLevelGenerator
 {
-    public class GrassGameLevelComponentFactory : IGameLevelComponentFactory
+    public class GrassGameLevelComponentFactory : IGameLevelComponentFactory, IGameLevelRendererFactory
     {
         static CellRenderer CreateGrassDartRenderer()
         {
@@ -116,6 +116,11 @@ namespace Maze.GameLevelGenerator
         public GameLevelRendererSettings CreateLevelSettings()
         {
             return new GameLevelRendererSettings(32, 20);
+        }
+
+        public GameLevelRenderer CreateRenderer()
+        {
+            return new NormalGameLevelRenderer(this);
         }
     }
 }

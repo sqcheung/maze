@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using Axe.Cli.Parser;
 using Axe.Cli.Parser.Transformers;
@@ -41,7 +40,7 @@ namespace Maze.Console
                 return;
             }
             
-            IGameLevelComponentFactory factory = CreateMazeFactory(mazeKind);
+            IGameLevelRendererFactory factory = CreateMazeFactory(mazeKind);
             if (factory == null)
             {
                 PrintUsage();
@@ -53,13 +52,13 @@ namespace Maze.Console
             var renderGrid = new RenderGrid(grid);
 
             using (FileStream stream = File.Create(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "maze.png")))
-            using (var gameLevelRenderer = new Fake3DGameLevelRenderer(factory))
+            using (GameLevelRenderer gameLevelRenderer = factory.CreateRenderer())
             {
                 gameLevelRenderer.Render(renderGrid, stream);
             }
         }
 
-        static IGameLevelComponentFactory CreateMazeFactory(string mazeKind)
+        static IGameLevelRendererFactory CreateMazeFactory(string mazeKind)
         {
             switch (mazeKind)
             {
