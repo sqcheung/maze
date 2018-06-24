@@ -141,17 +141,5 @@ namespace Maze.Test
 
             return builder.ToString();
         }
-
-        static void AssertCellProperties(RenderCell cell, RenderType renderType, Direction direction,
-            object northNeighbor,
-            RenderCell southNeighbor, RenderCell eastNeighbor, object westNeighbor)
-        {
-            Assert.Equal(direction, cell.Direction);
-            Assert.Equal(renderType, cell.RenderType);
-            Assert.Equal(northNeighbor, cell.North);
-            Assert.Equal(southNeighbor, cell.South);
-            Assert.Equal(westNeighbor, cell.West);
-            Assert.Equal(eastNeighbor, cell.East);
-        }
     }
 }
