@@ -5,18 +5,18 @@ using SixLabors.Primitives;
 
 namespace Maze.Common.Renderers
 {
-    public class AreaColorRender : AreaRenderer
+    public class CellColorRender : CellRenderer
     {
         readonly Rgba32 _color;
 
-        public AreaColorRender(Rgba32 color)
+        public CellColorRender(Rgba32 color)
         {
             _color = color;
         }
         
-        public override void Render(IImageProcessingContext<Rgba32> context, Rectangle renderArea)
+        public override void Render(IImageProcessingContext<Rgba32> context, Rectangle cellArea, RenderCell cell)
         {
-            context.Fill(_color, renderArea);
+            context.Fill(_color, cellArea);
         }
 
         protected override void Dispose(bool disposing)
