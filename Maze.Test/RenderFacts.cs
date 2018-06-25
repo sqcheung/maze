@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using Maze.Common;
 using Maze.Common.Renderers;
 using Maze.GameLevelGenerator;
 using Maze.GameLevelGenerator.Components;
@@ -13,7 +13,7 @@ namespace Maze.Test
 {
     public class RenderFacts
     {
-        class GameLevelFactory : IGameLevelComponentFactory
+        class TestComponentFactory : IGameLevelComponentFactory
         {   
             public IEnumerable<AreaRenderer> CreateBackgroundRenderers()
             {
@@ -94,19 +94,9 @@ namespace Maze.Test
                     unknown);
             }
 
-            public IEnumerable<AreaRenderer> CreateAtomsphereRenderers()
+            public GameLevelRenderSettings CreateSettings()
             {
-                yield return new AreaColorRender(new Rgba32(20, 100, 80, 20));
-            }
-
-            public GameLevelRendererSettings CreateLevelSettings()
-            {
-                return new GameLevelRendererSettings(20, 20);
-            }
-
-            public GameLevelRenderer CreateRenderer()
-            {
-                throw new NotImplementedException();
+                return new GameLevelRenderSettings(20, 20);
             }
 
             static Image<Rgba32> CreateImage(Rgba32 backgroundColor)
@@ -115,15 +105,44 @@ namespace Maze.Test
             }
         }
 
+        class TestLevelWriter
+        {
+            public void Write(Stream stream)
+            {
+                RenderGrid renderGrid = ComplexMazeFixture.Create();
+                var factory = new TestComponentFactory();
+                var renderer = new NormalGameLevelRenderer(
+                    factory.CreateBackgroundRenderers(),
+                    factory.CreateGroundRenderers(),
+                    factory.CreateWallRenderers(),
+                    factory.CreateSettings());
+                using (renderer)
+                {
+                    renderer.Render(renderGrid, stream);
+                }
+            }
+            
+            public void Write3D(Stream stream)
+            {
+                RenderGrid renderGrid = ComplexMazeFixture.Create();
+                var factory = new TestComponentFactory();
+                var renderer = new Fake3DGameLevelRenderer(
+                    factory.CreateBackgroundRenderers(),
+                    factory.CreateGroundRenderers(),
+                    factory.CreateWallRenderers(),
+                    factory.CreateSettings());
+                using (renderer)
+                {
+                    renderer.Render(renderGrid, stream);
+                }
+            }
+        }
+
         [Fact]
         public void should_render_normal_game_level()
         {
             var stream = new MemoryStream();
-            using (var renderer = new NormalGameLevelRenderer(new GameLevelFactory()))
-            {
-                renderer.Render(ComplexMazeFixture.Create(), stream);
-            }
-            
+            new TestLevelWriter().Write(stream);
             stream.Seek(0, SeekOrigin.Begin);
             
             using (Image<Rgba32> actual = Image.Load<Rgba32>(stream))
@@ -139,11 +158,7 @@ namespace Maze.Test
         public void should_render_fake_3d_game_level()
         {
             var stream = new MemoryStream();
-            using (var renderer = new Fake3DGameLevelRenderer(new GameLevelFactory()))
-            {
-                renderer.Render(ComplexMazeFixture.Create(), stream);
-            }
-            
+            new TestLevelWriter().Write3D(stream);
             stream.Seek(0, SeekOrigin.Begin);
             
             using (Image<Rgba32> actual = Image.Load<Rgba32>(stream))

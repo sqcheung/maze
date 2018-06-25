@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using Maze.Common;
 using Maze.Common.Renderers;
@@ -12,54 +11,22 @@ namespace Maze.GameLevelGenerator.Components
 {
     public class NormalGameLevelRenderer : GameLevelRenderer
     {
-        readonly DisposableCollection<AreaRenderer> _backgroundRenderers;
-        readonly DisposableCollection<CellRenderer> _groundRenderers;
-        readonly DisposableCollection<CellRenderer> _wallRenderers;
-        readonly DisposableCollection<AreaRenderer> _atomsphereRenderers;
-        readonly GameLevelRendererSettings _settings;
-        bool _isDisposed;
-
-        static DisposableCollection<T> ToDisposableCollection<T>(IEnumerable<T> collection)
-            where T : IDisposable
+        public NormalGameLevelRenderer(IEnumerable<AreaRenderer> backgroundRenderers,
+            IEnumerable<CellRenderer> groundRenderers, IEnumerable<CellRenderer> wallRenderers,
+            GameLevelRenderSettings settings) : base(backgroundRenderers, groundRenderers, wallRenderers, settings)
         {
-            return new DisposableCollection<T>(collection);
-        }
-
-        public NormalGameLevelRenderer(IGameLevelComponentFactory factory)
-            : base(factory)
-        {
-            _backgroundRenderers = ToDisposableCollection(factory.CreateBackgroundRenderers());
-            _groundRenderers = ToDisposableCollection(factory.CreateGroundRenderers());
-            _wallRenderers = ToDisposableCollection(factory.CreateWallRenderers());
-            _atomsphereRenderers = ToDisposableCollection(factory.CreateAtomsphereRenderers());
-            _settings = factory.CreateLevelSettings();
-        }
-        
-        protected override void Dispose(bool disposing)
-        {
-            if (_isDisposed) return;
-
-            if (disposing)
-            {
-                _backgroundRenderers.Dispose();
-                _groundRenderers.Dispose();
-                _wallRenderers.Dispose();
-                _atomsphereRenderers.Dispose();
-            }
-
-            _isDisposed = true;
         }
 
         int CalculateDimension(int length)
         {
-            return length * _settings.CellSize + _settings.Margin * 2;
+            return length * Settings.CellSize + Settings.Margin * 2;
         }
 
         int TranslateCoordWithMargin(int original)
         {
-            return original + _settings.Margin;
-        } 
-        
+            return original + Settings.Margin;
+        }
+
         public override void Render(RenderGrid grid, Stream stream)
         {
             int width = CalculateDimension(grid.ColumnCount);
@@ -71,7 +38,7 @@ namespace Maze.GameLevelGenerator.Components
                 {
                     var fullArea = new Rectangle(0, 0, width, height);
                     
-                    foreach (AreaRenderer backgroundRenderer in _backgroundRenderers)
+                    foreach (AreaRenderer backgroundRenderer in BackgroundRenderers)
                     {
                         backgroundRenderer.Render(context, fullArea);
                     }
@@ -79,14 +46,14 @@ namespace Maze.GameLevelGenerator.Components
                     foreach (RenderCell cell in grid.GetCells())
                     {
                         var cellArea = new Rectangle(
-                            TranslateCoordWithMargin(cell.Column * _settings.CellSize), 
-                            TranslateCoordWithMargin(cell.Row * _settings.CellSize), 
-                            _settings.CellSize, 
-                            _settings.CellSize);
+                            TranslateCoordWithMargin(cell.Column * Settings.CellSize), 
+                            TranslateCoordWithMargin(cell.Row * Settings.CellSize), 
+                            Settings.CellSize, 
+                            Settings.CellSize);
 
                         if (cell.RenderType == RenderType.Ground)
                         {
-                            foreach (CellRenderer groundRenderer in _groundRenderers)
+                            foreach (CellRenderer groundRenderer in GroundRenderers)
                             {
                                 groundRenderer.Render(context, cellArea, cell);
                             }
@@ -94,16 +61,11 @@ namespace Maze.GameLevelGenerator.Components
 
                         if (cell.RenderType == RenderType.Wall)
                         {
-                            foreach (CellRenderer wallRenderer in _wallRenderers)
+                            foreach (CellRenderer wallRenderer in WallRenderers)
                             {
                                 wallRenderer.Render(context, cellArea, cell);
                             }
                         }
-                    }
-                    
-                    foreach (AreaRenderer atomsphereRenderer in _atomsphereRenderers)
-                    {
-                        atomsphereRenderer.Render(context, fullArea);
                     }
                 });
                 

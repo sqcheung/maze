@@ -1,8 +1,8 @@
 ﻿namespace Maze.GameLevelGenerator
 {
-    public class GameLevelRendererSettings
+    public class GameLevelRenderSettings
     {
-        public GameLevelRendererSettings(int cellSize, int margin)
+        public GameLevelRenderSettings(int cellSize, int margin)
         {
             CellSize = cellSize;
             Margin = margin;

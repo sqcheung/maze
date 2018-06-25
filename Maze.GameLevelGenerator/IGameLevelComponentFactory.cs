@@ -8,7 +8,6 @@ namespace Maze.GameLevelGenerator
         IEnumerable<AreaRenderer> CreateBackgroundRenderers();
         IEnumerable<CellRenderer> CreateWallRenderers();
         IEnumerable<CellRenderer> CreateGroundRenderers();
-        IEnumerable<AreaRenderer> CreateAtomsphereRenderers();
-        GameLevelRendererSettings CreateLevelSettings();
+        GameLevelRenderSettings CreateSettings();
     }
 }

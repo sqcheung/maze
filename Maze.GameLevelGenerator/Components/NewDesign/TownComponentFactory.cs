@@ -5,9 +5,9 @@ using Maze.Common.Renderers;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 
-namespace Maze.GameLevelGenerator.Components
+namespace Maze.GameLevelGenerator.Components.NewDesign
 {
-    public class TownFactory : IGameLevelComponentFactory, IGameLevelRendererFactory
+    public class TownComponentFactory : IGameLevelComponentFactory
     {
         static Assembly Assembly { get; } = Assembly.GetExecutingAssembly();
         
@@ -60,19 +60,9 @@ namespace Maze.GameLevelGenerator.Components
                 Assembly.LoadEmbeddedResource("Maze.GameLevelGenerator.Textures.road_all.png"));
         }
 
-        public IEnumerable<AreaRenderer> CreateAtomsphereRenderers()
+        public GameLevelRenderSettings CreateSettings()
         {
-            return Array.Empty<AreaRenderer>();
-        }
-
-        public GameLevelRendererSettings CreateLevelSettings()
-        {
-            return new GameLevelRendererSettings(100, 50);
-        }
-
-        public GameLevelRenderer CreateRenderer()
-        {
-            return new Fake3DGameLevelRenderer(this);
+            return new GameLevelRenderSettings(100, 50);
         }
     }
 }

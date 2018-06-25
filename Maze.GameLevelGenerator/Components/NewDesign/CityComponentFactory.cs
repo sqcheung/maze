@@ -4,9 +4,9 @@ using System.Reflection;
 using Maze.Common.Renderers;
 using SixLabors.ImageSharp.PixelFormats;
 
-namespace Maze.GameLevelGenerator.Components
+namespace Maze.GameLevelGenerator.Components.NewDesign
 {
-    public class CityFactory : IGameLevelComponentFactory, IGameLevelRendererFactory
+    public class CityComponentFactory : IGameLevelComponentFactory
     {
         public IEnumerable<AreaRenderer> CreateBackgroundRenderers()
         {
@@ -39,19 +39,9 @@ namespace Maze.GameLevelGenerator.Components
             return Array.Empty<CellRenderer>();
         }
 
-        public IEnumerable<AreaRenderer> CreateAtomsphereRenderers()
+        public GameLevelRenderSettings CreateSettings()
         {
-            return Array.Empty<AreaRenderer>();
-        }
-
-        public GameLevelRendererSettings CreateLevelSettings()
-        {
-            return new GameLevelRendererSettings(200, 100);
-        }
-
-        public GameLevelRenderer CreateRenderer()
-        {
-            return new Fake3DGameLevelRenderer(this);
+            return new GameLevelRenderSettings(200, 100);
         }
     }
 }

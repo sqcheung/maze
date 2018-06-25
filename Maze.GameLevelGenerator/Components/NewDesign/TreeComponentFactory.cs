@@ -4,9 +4,9 @@ using Maze.Common.Renderers;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 
-namespace Maze.GameLevelGenerator.Components
+namespace Maze.GameLevelGenerator.Components.NewDesign
 {
-    public class LovelyTreeGameLevelFactory : IGameLevelComponentFactory, IGameLevelRendererFactory
+    public class TreeComponentFactory : IGameLevelComponentFactory
     {
         public IEnumerable<AreaRenderer> CreateBackgroundRenderers()
         {
@@ -27,6 +27,11 @@ namespace Maze.GameLevelGenerator.Components
             yield return CreateAccessoryRenderer();
         }
 
+        public GameLevelRenderSettings CreateSettings()
+        {
+            return new GameLevelRenderSettings(78, 20);
+        }
+
         static CellRenderer CreateAccessoryRenderer()
         {
             string[] resourceKeys =
@@ -41,16 +46,6 @@ namespace Maze.GameLevelGenerator.Components
                 true);
         }
 
-        public IEnumerable<AreaRenderer> CreateAtomsphereRenderers()
-        {
-            yield break;
-        }
-
-        public GameLevelRendererSettings CreateLevelSettings()
-        {
-            return new GameLevelRendererSettings(78, 20);
-        }
-
         static CellRenderer CreateTreeCellRenderer()
         {
             string[] resourceKeys =
@@ -63,11 +58,6 @@ namespace Maze.GameLevelGenerator.Components
             return new RandomizedImageCellRenderer(
                 Assembly.GetExecutingAssembly().LoadEmbeddedResources(resourceKeys),
                 true);
-        }
-
-        public GameLevelRenderer CreateRenderer()
-        {
-            return new NormalGameLevelRenderer(this);
         }
     }
 }

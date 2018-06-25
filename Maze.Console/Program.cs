@@ -2,10 +2,10 @@
 using System.IO;
 using Axe.Cli.Parser;
 using Axe.Cli.Parser.Transformers;
-using Maze.Common;
 using Maze.Common.Algorithms;
 using Maze.GameLevelGenerator;
 using Maze.GameLevelGenerator.Components;
+using Maze.GameLevelGenerator.Components.NewDesign;
 using SixLabors.ImageSharp.PixelFormats;
 using C = System.Console;
 
@@ -13,6 +13,8 @@ namespace Maze.Console
 {
     static class Program
     {
+        const int InvalidArgumentCode = -2;
+        
         static int Main(string[] args)
         {
             ArgsParser parser = new ArgsParserBuilder()
@@ -27,14 +29,13 @@ namespace Maze.Console
                 .AddOptionWithValue("row", 'r', "Specify the number of rows in the maze.", true, new IntegerTransformer())
                 .AddOptionWithValue("column", 'c', "Specify the number of columns in the maze.", true, new IntegerTransformer())
                 .AddOptionWithValue("cellsize", 's', "Specify the width of each cell.", true, new IntegerTransformer())
-                .AddOptionWithValue("wallcolor", null, "Specify the color of the wall in hex format", true, new Rgba32Transformer())
                 .EndCommand()
                 .Build();
             
             ArgsParsingResult argsParsingResult = parser.Parse(args);
             if (!argsParsingResult.IsSuccess)
             {
-                PrintUsage(argsParsingResult.Error);
+                PrintUsage(argsParsingResult.Error.Code.ToString(), argsParsingResult.Error.Trigger);
                 return (int)argsParsingResult.Error.Code;
             }
 
@@ -58,23 +59,19 @@ namespace Maze.Console
             int numberOfRows = argsParsingResult.GetFirstOptionValue<int>("--row");
             int numberOfColumns = argsParsingResult.GetFirstOptionValue<int>("--column");
             int cellSize = argsParsingResult.GetFirstOptionValue<int>("--cellsize");
-            Rgba32 wallColor = argsParsingResult.GetFirstOptionValue<Rgba32>("--wallcolor");
 
             if (numberOfRows <= 0 || numberOfColumns <= 0)
             {
-                PrintUsage(argsParsingResult.Error);
+                PrintUsage("InvalidArgument", "--row or --column");
                 return (int)argsParsingResult.Error.Code;
             }
 
-            using (var renderer = new NormalGameLevelRenderer(new ColorMazeFactory
-            {
-                BackgroundColor = Rgba32.Black,
-                WallColor = wallColor,
-                CellSize = cellSize
-            }))
             using (FileStream stream = File.Create(imagePath))
             {
-                renderer.Render(CreateMazeGrid(numberOfRows, numberOfColumns), stream);
+                new ColorLevelWriter().Write(
+                    stream, 
+                    new MazeGridSettings(numberOfRows, numberOfColumns), 
+                    new GameLevelRenderSettings(cellSize, 10));
             }
 
             return 0;
@@ -88,52 +85,40 @@ namespace Maze.Console
             
             if (numberOfRows <= 0 || numberOfColumns <= 0)
             {
-                PrintUsage(argsParsingResult.Error);
-                return (int)argsParsingResult.Error.Code;
+                PrintUsage("InvalidArgument", $"--row {numberOfRows} --column {numberOfColumns}");
+                return InvalidArgumentCode;
             }
-            
-            IGameLevelRendererFactory factory = CreateRendererFactory(mazeKind);
-            if (factory == null)
-            {
-                PrintUsage(argsParsingResult.Error);
-                return (int)argsParsingResult.Error.Code;
-            }
-
-            RenderGrid renderGrid = CreateMazeGrid(numberOfRows, numberOfColumns);
 
             using (FileStream stream = File.Create(imagePath))
-            using (GameLevelRenderer gameLevelRenderer = factory.CreateRenderer())
             {
-                gameLevelRenderer.Render(renderGrid, stream);
+                return RenderPredefinedMaze(stream, mazeKind, new MazeGridSettings(numberOfRows, numberOfColumns));
+            }
+        }
+
+        static int RenderPredefinedMaze(FileStream stream, string mazeKind, MazeGridSettings mazeGridSettings)
+        {
+            switch (mazeKind)
+            {
+                case "tree": new TreeLevelWriter().Write(stream, mazeGridSettings);
+                    break;
+                case "grass": new GrassLevelWriter().Write(stream, mazeGridSettings);
+                    break;
+                case "city": new CityLevelWriter().Write(stream, mazeGridSettings);
+                    break;
+                case "town": new TownLevelWriter().Write(stream, mazeGridSettings);
+                    break;
+                default: 
+                    PrintUsage("InvalidArgument", $"--kind {mazeKind}");
+                    return InvalidArgumentCode;
             }
 
             return 0;
         }
 
-        static RenderGrid CreateMazeGrid(int numberOfRows, int numberOfColumns)
-        {
-            var grid = new Grid(numberOfRows, numberOfColumns);
-            new AldosBroderMazeAlgorithm().Update(grid);
-            var renderGrid = new RenderGrid(grid);
-            return renderGrid;
-        }
-
-        static IGameLevelRendererFactory CreateRendererFactory(string mazeKind)
-        {
-            switch (mazeKind)
-            {
-                case "tree": return new LovelyTreeGameLevelFactory();
-                case "grass": return new GrassGameLevelFactory();
-                case "city": return new CityFactory();
-                case "town": return new TownFactory();
-                default: return null;
-            }
-        }
-
-        static void PrintUsage(ArgsParsingError error)
+        static void PrintUsage(string code, string trigger)
         {
             C.Error.WriteLine("Error: ");
-            C.Error.WriteLine($"Code: {error.Code.ToString()}. Tigger: {error.Trigger}");
+            C.Error.WriteLine($"Code: {code}. Tigger: {trigger}");
             
             C.WriteLine();
             C.WriteLine("Usage:");
