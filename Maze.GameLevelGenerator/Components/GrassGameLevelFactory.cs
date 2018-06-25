@@ -4,13 +4,13 @@ using Maze.Common.Renderers;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 
-namespace Maze.GameLevelGenerator
+namespace Maze.GameLevelGenerator.Components
 {
-    public class GrassGameLevelComponentFactory : IGameLevelComponentFactory, IGameLevelRendererFactory
+    public class GrassGameLevelFactory : IGameLevelComponentFactory, IGameLevelRendererFactory
     {
         static CellRenderer CreateGrassDartRenderer()
         {
-            Assembly assembly = typeof(GrassGameLevelComponentFactory).Assembly;
+            Assembly assembly = typeof(GrassGameLevelFactory).Assembly;
             
             return new DirectedCellRenderer(
                 assembly.LoadEmbeddedResource("Maze.GameLevelGenerator.Textures.grass_sm_dart_south.png"),
@@ -32,7 +32,7 @@ namespace Maze.GameLevelGenerator
 
         static CellRenderer CreateGrassWallRenderer()
         {
-            Assembly assembly = typeof(GrassGameLevelComponentFactory).Assembly;
+            Assembly assembly = typeof(GrassGameLevelFactory).Assembly;
             Image<Rgba32> east = 
                 assembly.LoadEmbeddedResource("Maze.GameLevelGenerator.Textures.sm_grass_wall_east.png");
             Image<Rgba32> eastWest = 
@@ -104,7 +104,7 @@ namespace Maze.GameLevelGenerator
             };
 
             return new RandomizedImageCellRenderer(
-                typeof(GrassGameLevelComponentFactory).Assembly.LoadEmbeddedResources(resourceKeys),
+                typeof(GrassGameLevelFactory).Assembly.LoadEmbeddedResources(resourceKeys),
                 true);
         }
 

@@ -5,6 +5,7 @@ using Axe.Cli.Parser.Transformers;
 using Maze.Common;
 using Maze.Common.Algorithms;
 using Maze.GameLevelGenerator;
+using Maze.GameLevelGenerator.Components;
 using C = System.Console;
 
 namespace Maze.Console
@@ -62,9 +63,10 @@ namespace Maze.Console
         {
             switch (mazeKind)
             {
-                case "lovely-tree": return new LovelyTreeGameLevelComponentFactory();
-                case "farm": return new GrassGameLevelComponentFactory();
-                case "fake3d": return new Fake3DGameLevelComponentFactory();
+                case "tree": return new LovelyTreeGameLevelFactory();
+                case "grass": return new GrassGameLevelFactory();
+                case "city": return new CityFactory();
+                case "town": return new TownFactory();
                 default: return null;
             }
         }
@@ -73,7 +75,7 @@ namespace Maze.Console
         {
             C.WriteLine("Usage:");
             C.WriteLine("--kind | -k   The kind of maze to render. Supported values are");
-            C.WriteLine("              lovely-tree, farm, fake3d");
+            C.WriteLine("              tree, grass, city, town");
             C.WriteLine("--row  | -r   Specify the number of rows in the maze.");
             C.WriteLine("--column | -c Specify the number of columns in the maze.");
         }

@@ -4,9 +4,9 @@ using System.Reflection;
 using Maze.Common.Renderers;
 using SixLabors.ImageSharp.PixelFormats;
 
-namespace Maze.GameLevelGenerator
+namespace Maze.GameLevelGenerator.Components
 {
-    public class Fake3DGameLevelComponentFactory : IGameLevelComponentFactory, IGameLevelRendererFactory
+    public class CityFactory : IGameLevelComponentFactory, IGameLevelRendererFactory
     {
         public IEnumerable<AreaRenderer> CreateBackgroundRenderers()
         {

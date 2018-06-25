@@ -4,9 +4,9 @@ using Maze.Common.Renderers;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 
-namespace Maze.GameLevelGenerator
+namespace Maze.GameLevelGenerator.Components
 {
-    public class LovelyTreeGameLevelComponentFactory : IGameLevelComponentFactory, IGameLevelRendererFactory
+    public class LovelyTreeGameLevelFactory : IGameLevelComponentFactory, IGameLevelRendererFactory
     {
         public IEnumerable<AreaRenderer> CreateBackgroundRenderers()
         {
