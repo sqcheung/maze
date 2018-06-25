@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Reflection;
 using Maze.Common.Renderers;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 
-namespace Maze.GameLevelGenerator.Components.NewDesign
+namespace Maze.GameLevelGenerator.Components
 {
     public class TownComponentFactory : IGameLevelComponentFactory
     {

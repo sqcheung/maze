@@ -4,7 +4,7 @@ using Maze.Common.Renderers;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 
-namespace Maze.GameLevelGenerator.Components.NewDesign
+namespace Maze.GameLevelGenerator.Components
 {
     public class GrassComponentFactory : IGameLevelComponentFactory
     {

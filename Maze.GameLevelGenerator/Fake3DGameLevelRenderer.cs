@@ -7,7 +7,7 @@ using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.Primitives;
 
-namespace Maze.GameLevelGenerator.Components
+namespace Maze.GameLevelGenerator
 {
     public class Fake3DGameLevelRenderer : GameLevelRenderer
     {

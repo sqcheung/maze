@@ -5,7 +5,6 @@ using Axe.Cli.Parser.Transformers;
 using Maze.Common.Algorithms;
 using Maze.GameLevelGenerator;
 using Maze.GameLevelGenerator.Components;
-using Maze.GameLevelGenerator.Components.NewDesign;
 using SixLabors.ImageSharp.PixelFormats;
 using C = System.Console;
 
@@ -119,14 +118,6 @@ namespace Maze.Console
         {
             C.Error.WriteLine("Error: ");
             C.Error.WriteLine($"Code: {code}. Tigger: {trigger}");
-            
-            C.WriteLine();
-            C.WriteLine("Usage:");
-            
-            C.WriteLine("--kind | -k   The kind of maze to render. Supported values are");
-            C.WriteLine("              tree, grass, city, town");
-            C.WriteLine("--row  | -r   Specify the number of rows in the maze.");
-            C.WriteLine("--column | -c Specify the number of columns in the maze.");
         }
     }
 }

@@ -1,15 +1,15 @@
 ﻿using System.IO;
 using Maze.Common;
 
-namespace Maze.GameLevelGenerator.Components.NewDesign
+namespace Maze.GameLevelGenerator.Components
 {
-    public class GrassLevelWriter
+    public class TownLevelWriter
     {
         public void Write(Stream stream, MazeGridSettings mazeSettings)
         {
             RenderGrid renderGrid = new MazeGridFactory(mazeSettings).CreateRenderGrid();
-            var factory = new GrassComponentFactory();
-            var renderer = new NormalGameLevelRenderer(
+            var factory = new TownComponentFactory();
+            var renderer = new Fake3DGameLevelRenderer(
                 factory.CreateBackgroundRenderers(),
                 factory.CreateGroundRenderers(),
                 factory.CreateWallRenderers(),
