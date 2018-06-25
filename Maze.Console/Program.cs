@@ -13,7 +13,7 @@ namespace Maze.Console
 {
     static class Program
     {
-        static void Main(string[] args)
+        static int Main(string[] args)
         {
             ArgsParser parser = new ArgsParserBuilder()
                 .BeginDefaultCommand()
@@ -35,22 +35,25 @@ namespace Maze.Console
             if (!argsParsingResult.IsSuccess)
             {
                 PrintUsage(argsParsingResult.Error);
-                return;
+                return (int)argsParsingResult.Error.Code;
             }
 
             string imagePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "maze.png");
             
             if (argsParsingResult.Command.Symbol == null)
             {
-                RenderPredefinedMaze(argsParsingResult, imagePath);
+                return RenderPredefinedMaze(argsParsingResult, imagePath);
             }
-            else if (argsParsingResult.Command.Symbol.Equals("exp", StringComparison.OrdinalIgnoreCase))
+
+            if (argsParsingResult.Command.Symbol.Equals("exp", StringComparison.OrdinalIgnoreCase))
             {
-                RenderCusomizedMaze(argsParsingResult, imagePath);
+                return RenderCusomizedMaze(argsParsingResult, imagePath);
             }
+
+            return -1; // should not be here.
         }
 
-        static void RenderCusomizedMaze(ArgsParsingResult argsParsingResult, string imagePath)
+        static int RenderCusomizedMaze(ArgsParsingResult argsParsingResult, string imagePath)
         {
             int numberOfRows = argsParsingResult.GetFirstOptionValue<int>("--row");
             int numberOfColumns = argsParsingResult.GetFirstOptionValue<int>("--column");
@@ -60,7 +63,7 @@ namespace Maze.Console
             if (numberOfRows <= 0 || numberOfColumns <= 0)
             {
                 PrintUsage(argsParsingResult.Error);
-                return;
+                return (int)argsParsingResult.Error.Code;
             }
 
             using (var renderer = new NormalGameLevelRenderer(new ColorMazeFactory
@@ -73,9 +76,11 @@ namespace Maze.Console
             {
                 renderer.Render(CreateMazeGrid(numberOfRows, numberOfColumns), stream);
             }
+
+            return 0;
         }
 
-        static void RenderPredefinedMaze(ArgsParsingResult argsParsingResult, string imagePath)
+        static int RenderPredefinedMaze(ArgsParsingResult argsParsingResult, string imagePath)
         {
             string mazeKind = argsParsingResult.GetFirstOptionValue<string>("--kind");
             int numberOfRows = argsParsingResult.GetFirstOptionValue<int>("--row");
@@ -84,14 +89,14 @@ namespace Maze.Console
             if (numberOfRows <= 0 || numberOfColumns <= 0)
             {
                 PrintUsage(argsParsingResult.Error);
-                return;
+                return (int)argsParsingResult.Error.Code;
             }
             
             IGameLevelRendererFactory factory = CreateRendererFactory(mazeKind);
             if (factory == null)
             {
                 PrintUsage(argsParsingResult.Error);
-                return;
+                return (int)argsParsingResult.Error.Code;
             }
 
             RenderGrid renderGrid = CreateMazeGrid(numberOfRows, numberOfColumns);
@@ -101,6 +106,8 @@ namespace Maze.Console
             {
                 gameLevelRenderer.Render(renderGrid, stream);
             }
+
+            return 0;
         }
 
         static RenderGrid CreateMazeGrid(int numberOfRows, int numberOfColumns)
