@@ -24,11 +24,6 @@ namespace Maze.Console
                 .AddOptionWithValue("column", 'c', "Specify the number of columns in the maze.", true,
                     new IntegerTransformer())
                 .EndCommand()
-                .BeginCommand("exp", "Doing some experiment on highly customizable maze.")
-                .AddOptionWithValue("row", 'r', "Specify the number of rows in the maze.", true, new IntegerTransformer())
-                .AddOptionWithValue("column", 'c', "Specify the number of columns in the maze.", true, new IntegerTransformer())
-                .AddOptionWithValue("cellsize", 's', "Specify the width of each cell.", true, new IntegerTransformer())
-                .EndCommand()
                 .Build();
             
             ArgsParsingResult argsParsingResult = parser.Parse(args);
@@ -39,41 +34,7 @@ namespace Maze.Console
             }
 
             string imagePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "maze.png");
-            
-            if (argsParsingResult.Command.Symbol == null)
-            {
-                return RenderPredefinedMaze(argsParsingResult, imagePath);
-            }
-
-            if (argsParsingResult.Command.Symbol.Equals("exp", StringComparison.OrdinalIgnoreCase))
-            {
-                return RenderCusomizedMaze(argsParsingResult, imagePath);
-            }
-
-            return -1; // should not be here.
-        }
-
-        static int RenderCusomizedMaze(ArgsParsingResult argsParsingResult, string imagePath)
-        {
-            int numberOfRows = argsParsingResult.GetFirstOptionValue<int>("--row");
-            int numberOfColumns = argsParsingResult.GetFirstOptionValue<int>("--column");
-            int cellSize = argsParsingResult.GetFirstOptionValue<int>("--cellsize");
-
-            if (numberOfRows <= 0 || numberOfColumns <= 0)
-            {
-                PrintUsage("InvalidArgument", "--row or --column");
-                return (int)argsParsingResult.Error.Code;
-            }
-
-            using (FileStream stream = File.Create(imagePath))
-            {
-                new ColorLevelWriter().Write(
-                    stream, 
-                    new MazeGridSettings(numberOfRows, numberOfColumns), 
-                    new GameLevelRenderSettings(cellSize, 10));
-            }
-
-            return 0;
+            return RenderPredefinedMaze(argsParsingResult, imagePath);
         }
 
         static int RenderPredefinedMaze(ArgsParsingResult argsParsingResult, string imagePath)
@@ -105,6 +66,8 @@ namespace Maze.Console
                 case "city": new CityLevelWriter().Write(stream, mazeGridSettings);
                     break;
                 case "town": new TownLevelWriter().Write(stream, mazeGridSettings);
+                    break;
+                case "color": new ColorLevelWriter().Write(stream, mazeGridSettings);
                     break;
                 default: 
                     PrintUsage("InvalidArgument", $"--kind {mazeKind}");
