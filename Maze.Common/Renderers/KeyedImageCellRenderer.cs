@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
@@ -29,7 +28,9 @@ namespace Maze.Common.Renderers
         public override void Render(IImageProcessingContext<Rgba32> context, Rectangle cellArea, RenderCell cell)
         {
             if (!IsSupported(cell)) return;
-            Image<Rgba32> texture = _map[GetTextureKey(cell)];
+
+            string textureKey = GetTextureKey(cell);
+            Image<Rgba32> texture = _map[textureKey];
             if (texture == null) return;
             var location = new Point(
                 (cellArea.Left + cellArea.Right) / 2,

@@ -33,7 +33,7 @@ namespace Maze.Common
         {
             foreach (T item in _storage)
             {
-                item.Dispose();
+                item?.Dispose();
             }
         }
     }

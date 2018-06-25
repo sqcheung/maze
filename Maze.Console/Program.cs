@@ -41,7 +41,7 @@ namespace Maze.Console
                 return;
             }
             
-            IGameLevelRendererFactory factory = CreateMazeFactory(mazeKind);
+            IGameLevelRendererFactory factory = CreateRendererFactory(mazeKind);
             if (factory == null)
             {
                 PrintUsage();
@@ -59,7 +59,7 @@ namespace Maze.Console
             }
         }
 
-        static IGameLevelRendererFactory CreateMazeFactory(string mazeKind)
+        static IGameLevelRendererFactory CreateRendererFactory(string mazeKind)
         {
             switch (mazeKind)
             {

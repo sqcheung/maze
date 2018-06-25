@@ -11,5 +11,12 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Maze.Common\Maze.Common.csproj" />
+    <ProjectReference Include="..\Maze.GameLevelGenerator\Maze.GameLevelGenerator.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources/*.png" />
   </ItemGroup>
 </Project>

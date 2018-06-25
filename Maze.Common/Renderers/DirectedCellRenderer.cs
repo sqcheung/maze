@@ -22,7 +22,8 @@ namespace Maze.Common.Renderers
             Image<Rgba32> northSouthWest,
             Image<Rgba32> northEastWest,
             Image<Rgba32> southEastWest,
-            Image<Rgba32> northSouthEastWest) : base(CreateDirectedResources(
+            Image<Rgba32> northSouthEastWest,
+            Image<Rgba32> unknown = null) : base(CreateDirectedResources(
                 north,
                 south,
                 east,
@@ -37,7 +38,8 @@ namespace Maze.Common.Renderers
                 northSouthWest,
                 northEastWest,
                 southEastWest,
-                northSouthEastWest), true)
+                northSouthEastWest,
+                unknown), true)
         {
         }
 
@@ -45,7 +47,8 @@ namespace Maze.Common.Renderers
             Image<Rgba32> north, Image<Rgba32> south, Image<Rgba32> east, Image<Rgba32> west, Image<Rgba32> northSouth, 
             Image<Rgba32> northEast, Image<Rgba32> northWest, Image<Rgba32> southEast, Image<Rgba32> southWest, 
             Image<Rgba32> eastWest, Image<Rgba32> northSouthEast, Image<Rgba32> northSouthWest, 
-            Image<Rgba32> northEastWest, Image<Rgba32> southEastWest, Image<Rgba32> northSouthEastWest)
+            Image<Rgba32> northEastWest, Image<Rgba32> southEastWest, Image<Rgba32> northSouthEastWest,
+            Image<Rgba32> unknown)
         {
             return new Dictionary<string, Image<Rgba32>>
             {
@@ -64,6 +67,7 @@ namespace Maze.Common.Renderers
                 {"NorthEastWest", northEastWest},
                 {"SouthEastWest", southEastWest},
                 {"NorthSouthEastWest", northSouthEastWest},
+                {"Unknown", unknown}
             };
         }
 
@@ -80,7 +84,8 @@ namespace Maze.Common.Renderers
             if ((cellDirection & Direction.South) == Direction.South) keyBuilder.Append("South");
             if ((cellDirection & Direction.East) == Direction.East) keyBuilder.Append("East");
             if ((cellDirection & Direction.West) == Direction.West) keyBuilder.Append("West");
-            return keyBuilder.ToString();
+            
+            return keyBuilder.Length == 0 ? "Unknown" : keyBuilder.ToString();
         }
     }
 }
