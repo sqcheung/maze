@@ -6,13 +6,6 @@ namespace Maze.GameLevelGenerator.Components
 {
     public class ColorComponentFactory : IGameLevelComponentFactory
     {
-        readonly GameLevelRenderSettings _renderSettings;
-
-        public ColorComponentFactory(GameLevelRenderSettings renderSettings = null)
-        {
-            _renderSettings = renderSettings ?? new GameLevelRenderSettings(4, 10);
-        }
-
         public Rgba32 BackgroundColor { get; set; } = Rgba32.Black;
         public Rgba32 WallColor { get; set; } = Rgba32.LightSkyBlue;
 
@@ -33,7 +26,7 @@ namespace Maze.GameLevelGenerator.Components
 
         public GameLevelRenderSettings CreateSettings()
         {
-            return _renderSettings;
+            return new GameLevelRenderSettings(4, 10);
         }
     }
 }

@@ -5,10 +5,10 @@ namespace Maze.GameLevelGenerator.Components
 {
     public class ColorLevelWriter
     {
-        public void Write(Stream stream, MazeGridSettings mazeSettings, GameLevelRenderSettings renderSettings)
+        public void Write(Stream stream, MazeGridSettings mazeSettings)
         {
             RenderGrid renderGrid = new MazeGridFactory(mazeSettings).CreateRenderGrid();
-            var factory = new ColorComponentFactory(renderSettings);
+            var factory = new ColorComponentFactory();
             var renderer = new NormalGameLevelRenderer(
                 factory.CreateBackgroundRenderers(),
                 factory.CreateGroundRenderers(),
