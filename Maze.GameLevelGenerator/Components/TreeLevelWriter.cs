@@ -14,9 +14,9 @@ namespace Maze.GameLevelGenerator.Components
         {
             RenderGrid renderGrid = new MazeGridFactory(mazeSettings).CreateRenderGrid();
             var renderer = new NormalGameLevelRenderer(
-                CreateBackgroundRenderers(),
-                CreateGroundRenderers(),
-                CreateWallRenderers(),
+                CreateGrass(),
+                CreateAccessories(),
+                CreateTrees(),
                 new GameLevelRenderSettings(78, 20));
             using (renderer)
             {
@@ -24,7 +24,7 @@ namespace Maze.GameLevelGenerator.Components
             }
         }
         
-        IEnumerable<AreaRenderer> CreateBackgroundRenderers()
+        IEnumerable<AreaRenderer> CreateGrass()
         {
             Image<Rgba32> resource = Assembly.GetExecutingAssembly().LoadEmbeddedResource(
                 "Maze.GameLevelGenerator.Textures.lovely_tree_ground.png");
@@ -33,31 +33,7 @@ namespace Maze.GameLevelGenerator.Components
                 true);
         }
 
-        IEnumerable<CellRenderer> CreateWallRenderers()
-        {
-            yield return CreateTreeCellRenderer();
-        }
-
-        IEnumerable<CellRenderer> CreateGroundRenderers()
-        {
-            yield return CreateAccessoryRenderer();
-        }
-
-        CellRenderer CreateAccessoryRenderer()
-        {
-            string[] resourceKeys =
-            {
-                "Maze.GameLevelGenerator.Textures.lovely_tree_accessory_1.png",
-                "Maze.GameLevelGenerator.Textures.lovely_tree_accessory_2.png",
-                "Maze.GameLevelGenerator.Textures.lovely_tree_accessory_3.png"
-            };
-            
-            return new RandomizedImageVisibilityCellRenderer(
-                Assembly.GetExecutingAssembly().LoadEmbeddedResources(resourceKeys),
-                true);
-        }
-
-        CellRenderer CreateTreeCellRenderer()
+        static IEnumerable<CellRenderer> CreateTrees()
         {
             string[] resourceKeys =
             {
@@ -65,8 +41,20 @@ namespace Maze.GameLevelGenerator.Components
                 "Maze.GameLevelGenerator.Textures.lovely_tree_wall_2.png",
                 "Maze.GameLevelGenerator.Textures.lovely_tree_wall_3.png"
             };
-            
-            return new RandomizedImageCellRenderer(
+            yield return new RandomizedImageCellRenderer(
+                Assembly.GetExecutingAssembly().LoadEmbeddedResources(resourceKeys),
+                true);
+        }
+
+        IEnumerable<CellRenderer> CreateAccessories()
+        {
+            string[] resourceKeys =
+            {
+                "Maze.GameLevelGenerator.Textures.lovely_tree_accessory_1.png",
+                "Maze.GameLevelGenerator.Textures.lovely_tree_accessory_2.png",
+                "Maze.GameLevelGenerator.Textures.lovely_tree_accessory_3.png"
+            };
+            yield return new RandomizedImageVisibilityCellRenderer(
                 Assembly.GetExecutingAssembly().LoadEmbeddedResources(resourceKeys),
                 true);
         }

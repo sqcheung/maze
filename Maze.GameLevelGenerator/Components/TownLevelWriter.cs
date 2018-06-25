@@ -15,8 +15,8 @@ namespace Maze.GameLevelGenerator.Components
             RenderGrid renderGrid = new MazeGridFactory(mazeSettings).CreateRenderGrid();
             var renderer = new Fake3DGameLevelRenderer(
                 new [] {new AreaColorRender(Rgba32.White)},
-                CreateGroundRenderers(),
-                CreateWallRenderers(),
+                CreateRoads(),
+                CreateFake3DTownWall(),
                 new GameLevelRenderSettings(100, 50));
             using (renderer)
             {
@@ -26,7 +26,7 @@ namespace Maze.GameLevelGenerator.Components
         
         static Assembly Assembly { get; } = Assembly.GetExecutingAssembly();
 
-        static IEnumerable<CellRenderer> CreateWallRenderers()
+        static IEnumerable<CellRenderer> CreateFake3DTownWall()
         {
             yield return new RandomizedImageCellRenderer(
                 Assembly.LoadEmbeddedResources(
@@ -46,7 +46,7 @@ namespace Maze.GameLevelGenerator.Components
                 true);
         }
 
-        static IEnumerable<CellRenderer> CreateGroundRenderers()
+        static IEnumerable<CellRenderer> CreateRoads()
         {
             Image<Rgba32> northSouth =
                 Assembly.LoadEmbeddedResource("Maze.GameLevelGenerator.Textures.road_north_south.png");

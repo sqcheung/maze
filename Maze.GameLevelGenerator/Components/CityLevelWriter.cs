@@ -14,9 +14,9 @@ namespace Maze.GameLevelGenerator.Components
         {
             RenderGrid renderGrid = new MazeGridFactory(mazeSettings).CreateRenderGrid();
             var renderer = new Fake3DGameLevelRenderer(
-                CreateBackgroundRenderers(),
+                CreateWhiteBackground(),
                 Array.Empty<CellRenderer>(),
-                CreateWallRenderers(),
+                CreateBuildings(),
                 new GameLevelRenderSettings(200, 100));
             using (renderer)
             {
@@ -24,12 +24,12 @@ namespace Maze.GameLevelGenerator.Components
             }
         }
         
-        IEnumerable<AreaRenderer> CreateBackgroundRenderers()
+        IEnumerable<AreaRenderer> CreateWhiteBackground()
         {
             yield return new AreaColorRender(Rgba32.White);
         }
         
-        IEnumerable<CellRenderer> CreateWallRenderers()
+        IEnumerable<CellRenderer> CreateBuildings()
         {
             yield return new RandomizedImageCellRenderer(
                 Assembly.GetExecutingAssembly().LoadEmbeddedResources(

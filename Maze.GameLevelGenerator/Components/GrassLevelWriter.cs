@@ -14,9 +14,9 @@ namespace Maze.GameLevelGenerator.Components
         {
             RenderGrid renderGrid = new MazeGridFactory(mazeSettings).CreateRenderGrid();
             var renderer = new NormalGameLevelRenderer(
-                CreateBackgroundRenderers(),
-                CreateGroundRenderers(),
-                CreateWallRenderers(),
+                CreateGrassBackground(),
+                CreateGrassWithDirts(),
+                CreateRailings(),
                 new GameLevelRenderSettings(32, 20));
             using (renderer)
             {
@@ -26,17 +26,17 @@ namespace Maze.GameLevelGenerator.Components
 
         static readonly Assembly Assembly = Assembly.GetExecutingAssembly();
 
-        IEnumerable<AreaRenderer> CreateBackgroundRenderers()
+        IEnumerable<AreaRenderer> CreateGrassBackground()
         {
             Image<Rgba32> resource = Assembly.GetExecutingAssembly().LoadEmbeddedResource(
                 "Maze.GameLevelGenerator.Textures.sm_grass_ground_1.png");
             yield return new AreaTileImageRenderer(resource, true);
         }
 
-        IEnumerable<CellRenderer> CreateGroundRenderers()
+        IEnumerable<CellRenderer> CreateGrassWithDirts()
         {
             yield return CreateGrassGroundRenderer();
-            yield return CreateGrassDartRenderer();
+            yield return CreateGrassDirtRenderer();
         }
         
         static CellRenderer CreateGrassGroundRenderer()
@@ -56,7 +56,7 @@ namespace Maze.GameLevelGenerator.Components
                 true);
         }
         
-        static CellRenderer CreateGrassDartRenderer()
+        static CellRenderer CreateGrassDirtRenderer()
         {
             return new DirectedCellRenderer(
                 Assembly.LoadEmbeddedResource("Maze.GameLevelGenerator.Textures.grass_sm_dart_south.png"),
@@ -76,7 +76,7 @@ namespace Maze.GameLevelGenerator.Components
                 Assembly.LoadEmbeddedResource("Maze.GameLevelGenerator.Textures.grass_sm_dart_north_south_east_west.png"));
         }
 
-        static CellRenderer CreateGrassWallRenderer()
+        IEnumerable<CellRenderer> CreateRailings()
         {
             Image<Rgba32> east = 
                 Assembly.LoadEmbeddedResource("Maze.GameLevelGenerator.Textures.sm_grass_wall_east.png");
@@ -100,7 +100,7 @@ namespace Maze.GameLevelGenerator.Components
                 Assembly.LoadEmbeddedResource("Maze.GameLevelGenerator.Textures.sm_grass_wall_south_west.png");
             Image<Rgba32> west =
                 Assembly.LoadEmbeddedResource("Maze.GameLevelGenerator.Textures.sm_grass_wall_west.png");
-            return new DirectedCellRenderer(
+            yield return new DirectedCellRenderer(
                 north,
                 south,
                 east,
@@ -115,12 +115,7 @@ namespace Maze.GameLevelGenerator.Components
                 southWest,
                 eastWest,
                 southEastWest,
-                southEastWest); 
-        }
-        
-        IEnumerable<CellRenderer> CreateWallRenderers()
-        {
-            yield return CreateGrassWallRenderer();
+                southEastWest);
         }
     }
 }
