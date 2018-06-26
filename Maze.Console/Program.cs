@@ -2,10 +2,8 @@
 using System.IO;
 using Axe.Cli.Parser;
 using Axe.Cli.Parser.Transformers;
-using Maze.Common.Algorithms;
 using Maze.GameLevelGenerator;
 using Maze.GameLevelGenerator.Components;
-using SixLabors.ImageSharp.PixelFormats;
 using C = System.Console;
 
 namespace Maze.Console
