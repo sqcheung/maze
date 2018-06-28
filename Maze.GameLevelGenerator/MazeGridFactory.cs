@@ -1,4 +1,5 @@
 ﻿using Maze.Common;
+using Maze.Common.Algorithms;
 
 namespace Maze.GameLevelGenerator
 {
@@ -18,9 +19,15 @@ namespace Maze.GameLevelGenerator
             return grid;
         } 
         
-        public RenderGrid CreateRenderGrid()
+        public RenderGrid CreateRenderGrid(bool solve = false)
         {
-            return new RenderGrid(Create());
+            Grid grid = Create();
+            if (solve)
+            {
+                new DijkstraSolvingAlgorithm(0, 0).Update(grid);
+            }
+            
+            return new RenderGrid(grid);
         }
     }
 }

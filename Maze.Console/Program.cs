@@ -69,6 +69,8 @@ namespace Maze.Console
                     break;
                 case "color": new ColorLevelWriter().Write(stream, mazeGridSettings);
                     break;
+                case "color-solve": new ColorSolvingLevelWriter().Write(stream, mazeGridSettings);
+                    break;
                 default: 
                     PrintUsage("InvalidArgument", $"--kind {mazeKind}");
                     return InvalidArgumentCode;
