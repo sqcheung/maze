@@ -6,15 +6,16 @@ namespace Maze.Common
     public class GridCell : IEquatable<GridCell>
     {
         Guid Id { get; } = Guid.NewGuid();
-        public int Row { get; }
-        public int Column { get; }
         readonly HashSet<GridCell> _links = new HashSet<GridCell>();
         
+        public int Row { get; }
+        public int Column { get; }
         public GridCell North { get; private set; }
         public GridCell South { get; private set; }
         public GridCell East { get; private set; }
         public GridCell West { get; private set; }
         public IReadOnlyCollection<GridCell> Links => _links;
+        public IDictionary<string, object> Tags { get; } = new Dictionary<string, object>();
 
         public GridCell(int row, int column)
         {

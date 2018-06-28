@@ -29,6 +29,21 @@ namespace Maze.Test
             
             Assert.Equal(expectedRenderGrid, RenderToArray(renderGrid));
         }
+        
+        [Fact]
+        public void should_render_cell_with_tags()
+        {
+            var grid = new Grid(1, 1);
+            const string tagValue = "value";
+            grid[0, 0].Tags["key"] = tagValue;
+            var renderGrid = new RenderGrid(grid);
+            
+            // | n-w |  n  | n-e |
+            // |  w  |  c  |  e  |
+            // | s-w |  s  | s-e |
+
+            Assert.Equal(tagValue, renderGrid[1, 1].GetTag("key"));
+        }
 
         [Fact]
         public void should_render_multiple_columns()

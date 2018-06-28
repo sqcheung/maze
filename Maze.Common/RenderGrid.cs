@@ -75,6 +75,7 @@ namespace Maze.Common
                 int centerColumnIndex = TranslateGridIndex(cell.Column);
                 RenderCell center = renderGrid[centerRowIndex][centerColumnIndex];
                 center.RenderType = RenderType.Ground;
+                center.SetTags(cell.Tags);
                 renderGrid[centerRowIndex + 1][centerColumnIndex + 1].RenderType = RenderType.Wall;
                 renderGrid[centerRowIndex][centerColumnIndex + 1].RenderType =
                     cell.IsLinked(cell.East) ? RenderType.Ground : RenderType.Wall;

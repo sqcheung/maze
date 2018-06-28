@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace Maze.Common
 {
@@ -36,8 +37,22 @@ namespace Maze.Common
         public RenderCell South { get; private set; }
         public RenderCell East { get; private set; }
         public RenderCell West { get; private set; }
-        
         public RenderType RenderType { get; set; }
         public Direction Direction { get; set; }
+
+        IReadOnlyDictionary<string, object> _tags;
+
+        public object GetTag(string key)
+        {
+            if (key == null) return null;
+            IReadOnlyDictionary<string, object> theTags = _tags;
+            if (theTags == null) return null;
+            return theTags.ContainsKey(key) ? theTags[key] : null;
+        }
+
+        internal void SetTags(IDictionary<string, object> cellTags)
+        {
+            _tags = new ReadOnlyDictionary<string, object>(cellTags);
+        }
     }
 }
