@@ -6,7 +6,7 @@ using SixLabors.ImageSharp.PixelFormats;
 
 namespace Maze.GameLevelGenerator.Components
 {
-    public class ColorLevelWriter
+    public class ColorLevelWriter : IWriter
     {
         public void Write(Stream stream, MazeGridSettings mazeSettings)
         {

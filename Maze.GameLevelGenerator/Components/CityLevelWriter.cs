@@ -8,7 +8,7 @@ using SixLabors.ImageSharp.PixelFormats;
 
 namespace Maze.GameLevelGenerator.Components
 {
-    public class CityLevelWriter
+    public class CityLevelWriter : IWriter
     {
         public void Write(Stream stream, MazeGridSettings mazeSettings)
         {

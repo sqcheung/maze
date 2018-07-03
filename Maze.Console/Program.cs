@@ -3,7 +3,6 @@ using System.IO;
 using Axe.Cli.Parser;
 using Axe.Cli.Parser.Transformers;
 using Maze.GameLevelGenerator;
-using Maze.GameLevelGenerator.Components;
 using C = System.Console;
 
 namespace Maze.Console
@@ -55,23 +54,13 @@ namespace Maze.Console
 
         static int RenderPredefinedMaze(FileStream stream, string mazeKind, MazeGridSettings mazeGridSettings)
         {
-            switch (mazeKind)
+            var writer = new WriterFactory().CreateWriter(mazeKind);
+            if (writer == null)
             {
-                case "tree": new TreeLevelWriter().Write(stream, mazeGridSettings);
-                    break;
-                case "grass": new GrassLevelWriter().Write(stream, mazeGridSettings);
-                    break;
-                case "city": new CityLevelWriter().Write(stream, mazeGridSettings);
-                    break;
-                case "town": new TownLevelWriter().Write(stream, mazeGridSettings);
-                    break;
-                case "color": new ColorLevelWriter().Write(stream, mazeGridSettings);
-                    break;
-                default: 
-                    PrintUsage("InvalidArgument", $"--kind {mazeKind}");
-                    return InvalidArgumentCode;
+                PrintUsage("InvalidArgument", $"--kind {mazeKind}");
+                return InvalidArgumentCode;
             }
-
+            writer.Write(stream,mazeGridSettings);
             return 0;
         }
 
