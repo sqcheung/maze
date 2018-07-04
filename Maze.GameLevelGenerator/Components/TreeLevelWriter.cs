@@ -8,22 +8,27 @@ using SixLabors.ImageSharp.PixelFormats;
 
 namespace Maze.GameLevelGenerator.Components
 {
-    public class TreeLevelWriter : IWriter
+    public class TreeLevelWriter : WriterBase
     {
         public void Write(Stream stream, MazeGridSettings mazeSettings)
         {
             RenderGrid renderGrid = new MazeGridFactory(mazeSettings).CreateRenderGrid();
-            var renderer = new NormalGameLevelRenderer(
-                CreateGrass(),
-                CreateAccessories(),
-                CreateTrees(),
-                new GameLevelRenderSettings(78, 20));
+            var renderer = CreateRenderer();
             using (renderer)
             {
                 renderer.Render(renderGrid, stream);
             }
         }
-        
+
+        protected override GameLevelRenderer CreateRenderer()
+        {
+            return  new NormalGameLevelRenderer(
+                CreateGrass(),
+                CreateAccessories(),
+                CreateTrees(),
+                new GameLevelRenderSettings(78, 20));
+        }
+
         IEnumerable<AreaRenderer> CreateGrass()
         {
             Image<Rgba32> resource = Assembly.GetExecutingAssembly().LoadEmbeddedResource(

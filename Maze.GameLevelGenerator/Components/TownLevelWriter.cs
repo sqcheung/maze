@@ -8,22 +8,27 @@ using SixLabors.ImageSharp.PixelFormats;
 
 namespace Maze.GameLevelGenerator.Components
 {
-    public class TownLevelWriter : IWriter
+    public class TownLevelWriter : WriterBase
     {
         public void Write(Stream stream, MazeGridSettings mazeSettings)
         {
             RenderGrid renderGrid = new MazeGridFactory(mazeSettings).CreateRenderGrid();
-            var renderer = new Fake3DGameLevelRenderer(
-                new [] {new AreaColorRender(Rgba32.White)},
-                CreateRoads(),
-                CreateFake3DTownWall(),
-                new GameLevelRenderSettings(100, 50));
+            var renderer = CreateRenderer();
             using (renderer)
             {
                 renderer.Render(renderGrid, stream);
             }
         }
-        
+
+        protected override GameLevelRenderer CreateRenderer()
+        {
+           return new Fake3DGameLevelRenderer(
+               new [] {new AreaColorRender(Rgba32.White)},
+               CreateRoads(),
+               CreateFake3DTownWall(),
+               new GameLevelRenderSettings(100, 50));
+        }
+
         static Assembly Assembly { get; } = Assembly.GetExecutingAssembly();
 
         static IEnumerable<CellRenderer> CreateFake3DTownWall()

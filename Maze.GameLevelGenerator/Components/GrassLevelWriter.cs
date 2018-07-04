@@ -8,20 +8,25 @@ using SixLabors.ImageSharp.PixelFormats;
 
 namespace Maze.GameLevelGenerator.Components
 {
-    public class GrassLevelWriter : IWriter
+    public class GrassLevelWriter : WriterBase
     {
         public void Write(Stream stream, MazeGridSettings mazeSettings)
         {
             RenderGrid renderGrid = new MazeGridFactory(mazeSettings).CreateRenderGrid();
-            var renderer = new NormalGameLevelRenderer(
-                CreateGrassBackground(),
-                CreateGrassWithDirts(),
-                CreateRailings(),
-                new GameLevelRenderSettings(32, 20));
+            var renderer = CreateRenderer();
             using (renderer)
             {
                 renderer.Render(renderGrid, stream);
             }
+        }
+
+        protected override GameLevelRenderer CreateRenderer()
+        {
+           return new NormalGameLevelRenderer(
+               CreateGrassBackground(),
+               CreateGrassWithDirts(),
+               CreateRailings(),
+               new GameLevelRenderSettings(32, 20));
         }
 
         static readonly Assembly Assembly = Assembly.GetExecutingAssembly();

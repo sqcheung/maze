@@ -1,29 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Reflection;
-using Maze.Common;
 using Maze.Common.Renderers;
 using SixLabors.ImageSharp.PixelFormats;
 
 namespace Maze.GameLevelGenerator.Components
 {
-    public class CityLevelWriter : IWriter
+    public class CityLevelWriter : WriterBase
     {
-        public void Write(Stream stream, MazeGridSettings mazeSettings)
+        protected override GameLevelRenderer CreateRenderer()
         {
-            RenderGrid renderGrid = new MazeGridFactory(mazeSettings).CreateRenderGrid();
-            var renderer = new Fake3DGameLevelRenderer(
+            return new Fake3DGameLevelRenderer(
                 CreateWhiteBackground(),
                 Array.Empty<CellRenderer>(),
                 CreateBuildings(),
                 new GameLevelRenderSettings(200, 100));
-            using (renderer)
-            {
-                renderer.Render(renderGrid, stream);
-            }
         }
-        
+
         IEnumerable<AreaRenderer> CreateWhiteBackground()
         {
             yield return new AreaColorRender(Rgba32.White);
